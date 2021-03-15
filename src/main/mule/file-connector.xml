@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e86815f7-0f6a-49a3-8b2f-923058351985" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="e0bb8ec5-cb2d-4db7-ac54-7441e7e4a0b7" />
+	<flow name="file-connectorFlow" doc:id="665b0b8c-a464-4181-9042-7958523c60cd" >
+		<http:listener doc:name="Listener" doc:id="9753ab91-553b-492b-be84-7ff40f947ee1" config-ref="HTTP_Listener_config" path="/file"/>
+		<file:write doc:id="e441ca3f-3165-4c2d-a357-998c2fa701a8" config-ref="File_Config" path="C:\Users\Dell\AnypointStudio\studio-workspace\file-connector\src\main\resources\write"/>
+		<logger level="INFO" doc:name="Logger" doc:id="f21da081-ed8c-4100-8876-bc841e5d0de5" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="0ca1dc80-0c8a-462d-9a54-b5a3d0c3d089" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+{
+	"message": "file has been updated successfully"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
